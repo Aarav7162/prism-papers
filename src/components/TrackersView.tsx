@@ -44,7 +44,10 @@ export const TrackersView: React.FC<TrackersViewProps> = ({
   const totalHoursLogged = solvedPapers.reduce((acc, p) => acc + (p.durationMinutes || 90), 0) / 60;
 
   // Grade Prediction logic
-  const getPredictedGrade = (accuracy: number) => {
+  const getPredictedGrade = (accuracy: number, solvedCount: number) => {
+    if (solvedCount === 0) {
+      return { grade: '—', label: 'Complete papers to project grade', color: 'text-slate-400' };
+    }
     if (board === 'IGCSE') {
       if (accuracy >= 85) return { grade: 'A*', label: 'Top 5th Percentile', color: 'text-emerald-400' };
       if (accuracy >= 72) return { grade: 'A', label: 'Solid Distinction', color: 'text-cyan-400' };
@@ -57,7 +60,7 @@ export const TrackersView: React.FC<TrackersViewProps> = ({
     }
   };
 
-  const predicted = getPredictedGrade(overallAccuracy);
+  const predicted = getPredictedGrade(overallAccuracy, solvedPapers.length);
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-8 pb-32 space-y-8 select-none">
