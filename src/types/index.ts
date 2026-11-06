@@ -57,6 +57,8 @@ export interface Paper {
   bestScore?: number;
   avgSolveTimeMinutes?: number;
   lastAttempted?: string;
+  fileKey?: string;
+  pdfUrl?: string;
 }
 
 export interface Point {

@@ -91,7 +91,21 @@ export default function App() {
     const saved = localStorage.getItem('prism_papers');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          // If user has not onboarded yet (brand new profile), ensure all start clean unattempted
+          if (!localStorage.getItem('prism_onboarded')) {
+            return parsed.map((p: Paper) => ({
+              ...p,
+              status: 'unattempted' as const,
+              score: undefined,
+              bestScore: undefined,
+              avgSolveTimeMinutes: undefined,
+              lastAttempted: undefined,
+            }));
+          }
+          return parsed;
+        }
       } catch {
         return INITIAL_PAPERS;
       }
@@ -164,6 +178,99 @@ export default function App() {
     localStorage.setItem('prism_papers', JSON.stringify(papers));
   }, [papers]);
 
+  // Sync with PRISM Backend Database & Offline Reconciliation Bridge on mount
+  useEffect(() => {
+    async function syncBackendData() {
+      try {
+        // 1. Fetch available papers from backend catalog
+        const res = await fetch('/api/papers?limit=100');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && json.data?.items?.length > 0) {
+            const backendPapers: Paper[] = json.data.items.map((bp: any) => {
+              const bUpper = (bp.subject?.board?.id || 'igcse').toUpperCase() as Board;
+              return {
+                id: bp.id,
+                board: bUpper,
+                subjectId: bp.subjectId,
+                subjectName: bp.subject?.name || 'Mathematics',
+                year: bp.year,
+                session: (bp.session || 'May/June') as any,
+                paperCode: `${bp.subject?.code || '0580'}/${bp.variant || '22'}`,
+                seriesLabel: `${bp.session} ${bp.year} - Var ${bp.variant}`,
+                totalMarks: bp.totalMarks || 80,
+                durationMinutes: bp.durationMins || 90,
+                questions: (bp.questions || []).map((q: any, idx: number) => ({
+                  id: q.id,
+                  number: idx + 1,
+                  title: `Question ${q.questionNum || idx + 1}`,
+                  totalMarks: q.maxMarks || 4,
+                  subparts: [
+                    {
+                      id: `${q.id}-part1`,
+                      label: q.questionNum || `(${String.fromCharCode(97 + idx)})`,
+                      text: `Solve the problem for ${q.topicTags?.join(', ') || 'this section'}.`,
+                      maxMarks: q.maxMarks || 4,
+                      rubricSteps: Array.isArray(q.rubricJson)
+                        ? q.rubricJson.map((r: any, rIdx: number) => ({
+                            id: `r-${idx}-${rIdx}`,
+                            code: r.code || 'M1',
+                            title: r.desc || 'Method',
+                            description: r.desc || 'Correct working step',
+                            marks: r.marks || 1,
+                          }))
+                        : [
+                            { id: `r-${idx}-1`, code: 'M1', title: 'Method', description: 'Correct formula setup', marks: 1 },
+                            { id: `r-${idx}-2`, code: 'A1', title: 'Accuracy', description: 'Accurate evaluation', marks: 1 },
+                          ],
+                      officialAnswer: 'Refer to official mark scheme.',
+                    },
+                  ],
+                })),
+                status: 'unattempted',
+              };
+            });
+
+            setPapers((prev) => {
+              const prevIds = new Set(prev.map((p) => p.id));
+              const newFromBackend = backendPapers.filter((bp) => !prevIds.has(bp.id));
+              return newFromBackend.length > 0 ? [...newFromBackend, ...prev] : prev;
+            });
+          }
+        }
+
+        // 2. Offline sync bridge: reconcile any saved local progress to PostgreSQL
+        const savedPapers = localStorage.getItem('prism_papers');
+        if (savedPapers) {
+          const parsed: Paper[] = JSON.parse(savedPapers);
+          const attempted = parsed.filter((p) => p.status !== 'unattempted');
+          if (attempted.length > 0) {
+            const syncItems = attempted.map((p) => ({
+              paperId: p.id,
+              status: p.status === 'solved' ? 'SOLVED' : 'IN_PROGRESS',
+              scoreAchieved: p.score || 0,
+              timeSpentSecs: (p.avgSolveTimeMinutes || 0) * 60,
+              answersJson: {
+                bestScore: p.bestScore,
+                lastAttempted: p.lastAttempted,
+              },
+              updatedAt: p.lastAttempted || new Date().toISOString(),
+            }));
+            await fetch('/api/user/progress/sync', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ items: syncItems }),
+            });
+          }
+        }
+      } catch (err) {
+        // Fallback silently to offline localStorage if backend server is starting
+        console.info('[PRISM] Operating in local-first mode:', err);
+      }
+    }
+    syncBackendData();
+  }, []);
+
   // Exam Countdown Timer
   useEffect(() => {
     if (!activePaper || !isTimerRunning || timerRemaining <= 0 || isGradingMode) return;
@@ -191,6 +298,19 @@ export default function App() {
     if (chosenSubjects.length > 0) {
       setSelectedSubjectId(chosenSubjects[0]);
     }
+
+    // Fresh profile initialization: Ensure ALL papers start 100% clean as unattempted
+    setPapers((prev) =>
+      prev.map((p) => ({
+        ...p,
+        status: 'unattempted' as const,
+        score: undefined,
+        bestScore: undefined,
+        avgSolveTimeMinutes: undefined,
+        lastAttempted: undefined,
+      }))
+    );
+
     setShowBoardOnboarding(false);
     setIsSettingsMode(false);
     haptics.playGlassExplosion();

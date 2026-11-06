@@ -117,10 +117,10 @@ export const generatePapersForSubject = (board: Board, subject: Subject): Paper[
       seriesLabel: `${subject.name} Paper (${session} ${year})`,
       totalMarks: subject.category === 'STEM' ? (board === 'IGCSE' ? 130 : 80) : 100,
       durationMinutes: subject.category === 'STEM' ? 120 : 90,
-      status: is2024 ? 'in_progress' : is2023 ? 'solved' : 'unattempted',
-      score: is2023 ? (subject.category === 'STEM' ? 116 : 88) : is2024 ? 72 : undefined,
-      bestScore: is2023 ? (subject.category === 'STEM' ? 116 : 88) : undefined,
-      avgSolveTimeMinutes: 85,
+      status: 'unattempted',
+      score: undefined,
+      bestScore: undefined,
+      avgSolveTimeMinutes: undefined,
       questions: [
         {
           id: `q1_${subject.id}_${year}`,

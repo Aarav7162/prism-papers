@@ -11,7 +11,8 @@ import {
   ChevronRight,
   FileText,
   Rows,
-  Square
+  Square,
+  ExternalLink
 } from 'lucide-react';
 import { Paper, AnnotationStroke, Point } from '../types';
 import { haptics } from '../services/haptics';
@@ -33,7 +34,8 @@ export const FoldableExamPaper: React.FC<FoldableExamPaperProps> = ({
 }) => {
   const [zoomLevel, setZoomLevel] = useState(100);
   const [currentPage, setCurrentPage] = useState(1);
-  const [viewMode, setViewMode] = useState<'single' | 'scroll'>('single');
+  const [viewMode, setViewMode] = useState<'pdf' | 'single' | 'scroll'>('pdf');
+  const pdfViewerUrl = paper.pdfUrl || `/api/papers/${paper.id}/view?redirect=true`;
   const totalPages = Math.max(3, paper.questions.length);
 
   // Stylus tools
@@ -227,12 +229,25 @@ export const FoldableExamPaper: React.FC<FoldableExamPaperProps> = ({
             <button
               onClick={() => {
                 haptics.playPaperTurn();
+                setViewMode('pdf');
+              }}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
+                viewMode === 'pdf' ? 'bg-purple-600/30 text-purple-200 font-semibold shadow-sm' : 'text-slate-400 hover:text-slate-200'
+              }`}
+              title="Official Board Past Paper PDF"
+            >
+              <FileText className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Official PDF</span>
+            </button>
+            <button
+              onClick={() => {
+                haptics.playPaperTurn();
                 setViewMode('single');
               }}
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
                 viewMode === 'single' ? 'bg-purple-600/30 text-purple-200 font-semibold' : 'text-slate-400 hover:text-slate-200'
               }`}
-              title="Single Page PDF View"
+              title="Interactive Digital Single Page Docket"
             >
               <Square className="w-3.5 h-3.5" />
               <span>Page</span>
@@ -245,7 +260,7 @@ export const FoldableExamPaper: React.FC<FoldableExamPaperProps> = ({
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
                 viewMode === 'scroll' ? 'bg-purple-600/30 text-purple-200 font-semibold' : 'text-slate-400 hover:text-slate-200'
               }`}
-              title="Continuous Scroll PDF View"
+              title="Interactive Continuous Scroll Docket"
             >
               <Rows className="w-3.5 h-3.5" />
               <span>Scroll</span>
@@ -284,123 +299,152 @@ export const FoldableExamPaper: React.FC<FoldableExamPaperProps> = ({
           )}
         </div>
 
-        {/* Center: Stylus & Liquid Resin Ink Controls */}
-        <div className="flex items-center gap-1.5 bg-black/60 p-1 rounded-xl border border-white/[0.08]">
-          <button
-            onClick={() => {
-              haptics.playPaperTurn();
-              setActiveTool('pen');
-            }}
-            className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-              activeTool === 'pen'
-                ? 'bg-white/[0.14] text-cyan-300 border border-cyan-500/40 shadow-[0_0_8px_rgba(56,189,248,0.3)]'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-            title="Liquid Ink Pen"
-          >
-            <PenTool className="w-3.5 h-3.5" />
-          </button>
-
-          <button
-            onClick={() => {
-              haptics.playPaperTurn();
-              setActiveTool('highlighter');
-            }}
-            className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-              activeTool === 'highlighter'
-                ? 'bg-white/[0.14] text-amber-300 border border-amber-500/40 shadow-[0_0_8px_rgba(245,158,11,0.3)]'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-            title="Amber Highlighter"
-          >
-            <Highlighter className="w-3.5 h-3.5" />
-          </button>
-
-          <button
-            onClick={() => {
-              haptics.playPaperTurn();
-              setActiveTool('eraser');
-            }}
-            className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-              activeTool === 'eraser'
-                ? 'bg-white/[0.14] text-rose-300 border border-rose-500/40 shadow-[0_0_8px_rgba(244,63,94,0.3)]'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-            title="Eraser"
-          >
-            <Eraser className="w-3.5 h-3.5" />
-          </button>
-
-          {/* Color Palette Dots */}
-          <div className="flex items-center gap-1 pl-1 ml-1 border-l border-white/[0.1]">
-            {colors.map((c) => (
-              <button
-                key={c.hex}
-                onClick={() => {
-                  haptics.playPaperTurn();
-                  setInkColor(c.hex);
-                }}
-                className={`w-3.5 h-3.5 rounded-full transition-transform cursor-pointer ${
-                  inkColor === c.hex ? 'scale-125 ring-2 ring-white/60' : 'opacity-60 hover:opacity-100'
-                }`}
-                style={{ backgroundColor: c.hex }}
-                title={c.name}
-              />
-            ))}
+        {/* Center: Stylus Controls or PDF Stream Indicator */}
+        {viewMode === 'pdf' ? (
+          <div className="flex items-center gap-2 px-3 py-1 bg-black/60 rounded-xl border border-white/[0.08] text-xs font-mono text-slate-400">
+            <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-slate-300 font-medium">Original Examination PDF</span>
           </div>
+        ) : (
+          <div className="flex items-center gap-1.5 bg-black/60 p-1 rounded-xl border border-white/[0.08]">
+            <button
+              onClick={() => {
+                haptics.playPaperTurn();
+                setActiveTool('pen');
+              }}
+              className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                activeTool === 'pen'
+                  ? 'bg-white/[0.14] text-cyan-300 border border-cyan-500/40 shadow-[0_0_8px_rgba(56,189,248,0.3)]'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+              title="Liquid Ink Pen"
+            >
+              <PenTool className="w-3.5 h-3.5" />
+            </button>
 
-          <button
-            onClick={handleClearStrokes}
-            className="p-1.5 text-slate-500 hover:text-slate-300 transition-colors ml-1 cursor-pointer"
-            title="Clear Ink"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-          </button>
-        </div>
+            <button
+              onClick={() => {
+                haptics.playPaperTurn();
+                setActiveTool('highlighter');
+              }}
+              className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                activeTool === 'highlighter'
+                  ? 'bg-white/[0.14] text-amber-300 border border-amber-500/40 shadow-[0_0_8px_rgba(245,158,11,0.3)]'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+              title="Amber Highlighter"
+            >
+              <Highlighter className="w-3.5 h-3.5" />
+            </button>
 
-        {/* Right: Zoom & Download PDF */}
+            <button
+              onClick={() => {
+                haptics.playPaperTurn();
+                setActiveTool('eraser');
+              }}
+              className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                activeTool === 'eraser'
+                  ? 'bg-white/[0.14] text-rose-300 border border-rose-500/40 shadow-[0_0_8px_rgba(244,63,94,0.3)]'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+              title="Eraser"
+            >
+              <Eraser className="w-3.5 h-3.5" />
+            </button>
+
+            {/* Color Palette Dots */}
+            <div className="flex items-center gap-1 pl-1 ml-1 border-l border-white/[0.1]">
+              {colors.map((c) => (
+                <button
+                  key={c.hex}
+                  onClick={() => {
+                    haptics.playPaperTurn();
+                    setInkColor(c.hex);
+                  }}
+                  className={`w-3.5 h-3.5 rounded-full transition-transform cursor-pointer ${
+                    inkColor === c.hex ? 'scale-125 ring-2 ring-white/60' : 'opacity-60 hover:opacity-100'
+                  }`}
+                  style={{ backgroundColor: c.hex }}
+                  title={c.name}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={handleClearStrokes}
+              className="p-1.5 text-slate-500 hover:text-slate-300 transition-colors ml-1 cursor-pointer"
+              title="Clear Ink"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+
+        {/* Right: Actions, Zoom & PDF Popout */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 text-slate-400 bg-white/[0.03] border border-white/[0.08] rounded-lg p-0.5">
+          {viewMode !== 'pdf' && (
+            <div className="flex items-center gap-1 text-slate-400 bg-white/[0.03] border border-white/[0.08] rounded-lg p-0.5">
+              <button
+                onClick={() => setZoomLevel((z) => Math.max(75, z - 15))}
+                className="p-1 hover:text-white cursor-pointer"
+                title="Zoom Out"
+              >
+                <ZoomOut className="w-3.5 h-3.5" />
+              </button>
+              <span className="text-[11px] font-mono px-1.5 text-slate-300">
+                {zoomLevel}%
+              </span>
+              <button
+                onClick={() => setZoomLevel((z) => Math.min(175, z + 15))}
+                className="p-1 hover:text-white cursor-pointer"
+                title="Zoom In"
+              >
+                <ZoomIn className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+
+          {viewMode === 'pdf' && (
             <button
-              onClick={() => setZoomLevel((z) => Math.max(75, z - 15))}
-              className="p-1 hover:text-white cursor-pointer"
-              title="Zoom Out"
+              onClick={() => window.open(pdfViewerUrl, '_blank')}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-medium text-cyan-300 transition-all cursor-pointer"
+              title="Open Official PDF in New Tab / Dual Monitor"
             >
-              <ZoomOut className="w-3.5 h-3.5" />
+              <ExternalLink className="w-3.5 h-3.5 text-cyan-400" />
+              <span className="hidden sm:inline font-mono">Pop Out</span>
             </button>
-            <span className="text-[11px] font-mono px-1.5 text-slate-300">
-              {zoomLevel}%
-            </span>
-            <button
-              onClick={() => setZoomLevel((z) => Math.min(175, z + 15))}
-              className="p-1 hover:text-white cursor-pointer"
-              title="Zoom In"
-            >
-              <ZoomIn className="w-3.5 h-3.5" />
-            </button>
-          </div>
+          )}
 
           <button
             onClick={handleDownloadPDF}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-medium text-slate-200 transition-all cursor-pointer"
-            title="Download Official PDF"
+            title="Download Official PDF from R2"
           >
             <Download className="w-3.5 h-3.5 text-purple-400" />
-            <span className="hidden sm:inline font-mono">PDF</span>
+            <span className="hidden sm:inline font-mono">Download</span>
           </button>
         </div>
       </div>
 
-      {/* Main Vector PDF Paper Canvas Container */}
-      <div className="flex-1 overflow-auto p-6 flex justify-center items-start">
-        <div
-          ref={paperContainerRef}
-          style={{
-            transform: `scale(${zoomLevel / 100})`,
-            transformOrigin: 'top center',
-            transition: 'transform 0.15s ease-out',
-          }}
-          className="relative w-full max-w-3xl"
+      {/* Main Body: Either Authentic R2 PDF Stream or Interactive Vector Canvas */}
+      {viewMode === 'pdf' ? (
+        <div className="flex-1 w-full h-full bg-[#12141a] relative overflow-hidden flex flex-col">
+          <iframe
+            src={`${pdfViewerUrl}#toolbar=1&navpanes=0`}
+            className="w-full h-full border-0 bg-white"
+            title={`${paper.subjectName} Official Past Paper PDF`}
+          />
+        </div>
+      ) : (
+        <div className="flex-1 overflow-auto p-6 flex justify-center items-start">
+          <div
+            ref={paperContainerRef}
+            style={{
+              transform: `scale(${zoomLevel / 100})`,
+              transformOrigin: 'top center',
+              transition: 'transform 0.15s ease-out',
+            }}
+            className="relative w-full max-w-3xl"
         >
           {/* Authentic Clean White PDF Sheet */}
           <div className="relative min-h-[960px] bg-[#FFFFFF] rounded-sm text-slate-900 shadow-2xl border border-slate-300 overflow-hidden">
@@ -569,6 +613,7 @@ export const FoldableExamPaper: React.FC<FoldableExamPaperProps> = ({
           </div>
         </div>
       </div>
-    </div>
-  );
+    )}
+  </div>
+);
 };
