@@ -20,3 +20,4 @@ services:
 volumes:
   prism_pgdata:
     driver: local
+

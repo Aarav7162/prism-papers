@@ -49,3 +49,4 @@ jobs:
 
       - name: Build Next.js 15 Full-Stack App
         run: npm run build
+
