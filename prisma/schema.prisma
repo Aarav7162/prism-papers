@@ -1,0 +1,148 @@
+// PRISM Database Schema
+// Optimized for Supabase/Neon PostgreSQL with Prisma ORM
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum PaperType {
+  QUESTION_PAPER
+  MARK_SCHEME
+  EXAMINER_REPORT
+}
+
+enum ProgressStatus {
+  UNATTEMPTED
+  IN_PROGRESS
+  SOLVED
+  REVIEW_NEEDED
+}
+
+model User {
+  id        String         @id @default(uuid())
+  email     String         @unique
+  name      String?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  progress  UserProgress[]
+  bookmarks Bookmark[]
+
+  @@map("users")
+}
+
+model Board {
+  id        String    @id // slug e.g. "cbse", "igcse", "icse", "ib"
+  name      String
+  isActive  Boolean   @default(true) // Set false for IB as "Coming Soon"
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  subjects  Subject[]
+
+  @@map("boards")
+}
+
+model Subject {
+  id         String   @id @default(uuid())
+  boardId    String
+  name       String   // e.g. "Mathematics", "Physics"
+  code       String   // e.g. "0580", "041"
+  gradeLevel String   // e.g. "Class 10", "Class 12", "IGCSE"
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  board      Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  papers     Paper[]
+
+  @@unique([boardId, code, gradeLevel])
+  @@index([boardId])
+  @@map("subjects")
+}
+
+model Paper {
+  id           String         @id @default(uuid())
+  subjectId    String
+  year         Int
+  session      String         // e.g. "m/j", "o/n", "Feb/Mar", "Annual"
+  variant      String         // e.g. "22", "Set 1", "01"
+  paperType    PaperType      @default(QUESTION_PAPER)
+  fileKey      String         // Cloudflare R2 storage key path (e.g. "papers/igcse/0580/2023/0580_s23_qp_22.pdf")
+  totalMarks   Int
+  durationMins Int
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  // Optional direct link to corresponding mark scheme paper
+  markSchemeId String?
+  markScheme   Paper?         @relation("PaperMarkScheme", fields: [markSchemeId], references: [id], onDelete: SetNull)
+  linkedPapers Paper[]        @relation("PaperMarkScheme")
+
+  subject      Subject        @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  questions    Question[]
+  userProgress UserProgress[]
+  bookmarks    Bookmark[]
+
+  @@index([subjectId, year, session])
+  @@index([paperType])
+  @@index([fileKey])
+  @@map("papers")
+}
+
+model Question {
+  id          String   @id @default(uuid())
+  paperId     String
+  questionNum String   // e.g. "1(a)", "2", "3(b)(ii)"
+  maxMarks    Int
+  topicTags   String[] // e.g. ["Algebra", "Quadratic Equations"]
+  rubricJson  Json?    // e.g. [{"code": "M1", "desc": "Method mark"}, {"code": "A1", "desc": "Accuracy mark"}]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  paper       Paper    @relation(fields: [paperId], references: [id], onDelete: Cascade)
+
+  @@index([paperId])
+  @@map("questions")
+}
+
+model UserProgress {
+  id            String         @id @default(uuid())
+  userId        String
+  paperId       String
+  status        ProgressStatus @default(UNATTEMPTED)
+  scoreAchieved Float          @default(0.0)
+  timeSpentSecs Int            @default(0)
+  answersJson   Json           @default("{}") // captures canvas strokes, scratchpad, rubric checks
+  updatedAt     DateTime       @updatedAt
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  paper         Paper          @relation(fields: [paperId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, paperId])
+  @@index([userId])
+  @@index([paperId])
+  @@index([status])
+  @@map("user_progress")
+}
+
+model Bookmark {
+  id        String   @id @default(uuid())
+  userId    String
+  paperId   String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  paper     Paper    @relation(fields: [paperId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, paperId])
+  @@index([userId])
+  @@index([paperId])
+  @@map("bookmarks")
+}
+

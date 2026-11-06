@@ -195,8 +195,20 @@ export const FoldableExamPaper: React.FC<FoldableExamPaperProps> = ({
     }
   };
 
-  const handleDownloadPDF = () => {
+  const handleDownloadPDF = async () => {
     haptics.playSplitterSnap();
+    try {
+      const res = await fetch(`/api/papers/${paper.id}/download`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && json.data?.url) {
+          window.open(json.data.url, '_blank');
+          return;
+        }
+      }
+    } catch {
+      // offline fallback
+    }
     window.print();
   };
 

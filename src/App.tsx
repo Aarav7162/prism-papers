@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Sparkles, 
@@ -306,6 +308,26 @@ export default function App() {
         return p;
       })
     );
+
+    // Background async persist to PRISM backend
+    fetch(`/api/user/progress/${activePaper.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        status: 'SOLVED',
+        scoreAchieved: totalScore,
+        timeSpentSecs: (activePaper.durationMinutes * 60) - timerRemaining,
+        answersJson: {
+          awardedMarks,
+          completedSteps,
+          studentAnswers,
+          scratchpadNotes,
+          strokes,
+        },
+      }),
+    }).catch(() => {
+      // Offline fallback: will be synced later via localStorage sync bridge
+    });
   };
 
   // Global Keyboard Shortcuts
