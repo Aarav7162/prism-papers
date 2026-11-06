@@ -1,0 +1,61 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1187 >>
+stream
+BT
+/F1 22 Tf
+50 780 Td
+(Cambridge IGCSE Mathematics 0580/22) Tj
+/F1 12 Tf
+0 -28 Td
+(May/June 2024 - Paper 2 Extended - Duration: 1h 30m - Total Marks: 70) Tj
+/F1 10 Tf
+0 -24 Td
+(---------------------------------------------------------------------------------------------------) Tj
+0 -20 Td
+(INSTRUCTIONS TO CANDIDATES:) Tj 0 -16 Td
+(Answer all questions. Use a black or dark blue pen.) Tj 0 -16 Td
+(You may use an HB pencil for any diagrams or graphs.) Tj 0 -16 Td
+(Electronic calculators should be used where appropriate.) Tj 0 -16 Td
+() Tj 0 -16 Td
+(Question 1 [2 Marks]:) Tj 0 -16 Td
+(Write 0.0045 in standard form.) Tj 0 -16 Td
+() Tj 0 -16 Td
+(Question 2 [7 Marks]:) Tj 0 -16 Td
+(a Solve 2x^2 + 5x - 12 = 0 by factorisation. [3 marks]) Tj 0 -16 Td
+(b Solve the simultaneous equations: y = 2x + 1 and x^2 + y^2 = 29. [4 marks]) Tj 0 -16 Td
+() Tj 0 -16 Td
+(Question 3 [5 Marks]:) Tj 0 -16 Td
+(In triangle ABC, AB = 7 cm, BC = 9 cm and angle ABC = 60 degrees.) Tj 0 -16 Td
+(Calculate the length of AC and the area of the triangle.) Tj 0 -16 Td
+() Tj 0 -16 Td
+(Question 4 [3 Marks]:) Tj 0 -16 Td
+(Find the coordinates of the turning point on the curve y = x^2 - 6x + 11.) Tj 0 -16 Td
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000242 00000 n 
+00000001497 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1587
+%%EOF

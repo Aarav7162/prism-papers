@@ -2,11 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { apiSuccess, apiError } from "@/lib/api-response";
 import { BatchDownloadSchema } from "@/lib/validations/papers";
-import { generateR2PresignedUrl, PRESIGNED_URL_TTL_SECONDS, r2Client } from "@/lib/r2";
+import { generateR2PresignedUrl, PRESIGNED_URL_TTL_SECONDS, r2Client, isR2Configured } from "@/lib/r2";
 import { env } from "@/lib/env";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import archiver from "archiver";
 import { Readable, PassThrough } from "stream";
+import fs from "fs";
+import path from "path";
 
 /**
  * POST /api/papers/batch-download
@@ -122,13 +124,15 @@ export async function POST(request: NextRequest) {
             "_"
           );
 
-          if (
-            env.R2_ACCOUNT_ID === "dummy_account_id" &&
-            env.R2_ACCESS_KEY_ID === "dummy_access_key"
-          ) {
-            // Development fallback mock content
-            const placeholderContent = `PRISM Examination Past Paper\nSubject: ${paper.subject.name} (${paper.subject.code})\nYear: ${paper.year} | Session: ${paper.session} | Variant: ${paper.variant}\nType: ${paper.paperType}\nKey: ${paper.fileKey}\n`;
-            archive.append(placeholderContent, { name: filename });
+          if (!isR2Configured) {
+            const localPath = path.join(process.cwd(), "public", paper.fileKey);
+            if (fs.existsSync(localPath)) {
+              archive.file(localPath, { name: filename });
+            } else {
+              // Fallback mock content if file does not exist locally
+              const placeholderContent = `PRISM Examination Past Paper\nSubject: ${paper.subject.name} (${paper.subject.code})\nYear: ${paper.year} | Session: ${paper.session} | Variant: ${paper.variant}\nType: ${paper.paperType}\nKey: ${paper.fileKey}\n`;
+              archive.append(placeholderContent, { name: filename });
+            }
           } else {
             // Fetch object stream directly from Cloudflare R2
             try {

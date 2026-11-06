@@ -1,0 +1,52 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 816 >>
+stream
+BT
+/F1 22 Tf
+50 780 Td
+(CBSE Class 12 Mathematics Code 041 MARKING SCHEME) Tj
+/F1 12 Tf
+0 -28 Td
+(Annual Examination 2023 - Solution & Marking Breakdown) Tj
+/F1 10 Tf
+0 -24 Td
+(---------------------------------------------------------------------------------------------------) Tj
+0 -20 Td
+(Q1: |adj A| = |A|^n - 1 = |A|^2 = 64 => |A| = +/- 8 [1 mark]) Tj 0 -16 Td
+() Tj 0 -16 Td
+(Q2: Reflexive: a - a = 0 divisible by 2 [0.5 mark]) Tj 0 -16 Td
+(Symmetric: a - b = 2k => b - a = -2k [0.5 mark]) Tj 0 -16 Td
+(Transitive: a - b + b - c = 2k1 + k2 [1 mark]) Tj 0 -16 Td
+() Tj 0 -16 Td
+(Q3: Let I = int_0^pi/2 sin^4 x / sin^4 x + cos^4 x dx) Tj 0 -16 Td
+(Use property I = int_0^pi/2 cos^4 x / cos^4 x + sin^4 x dx [1.5 marks]) Tj 0 -16 Td
+(Adding both: 2I = int_0^pi/2 1 dx = pi/2 => I = pi/4 [1.5 marks]) Tj 0 -16 Td
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000242 00000 n 
+00000001126 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1216
+%%EOF

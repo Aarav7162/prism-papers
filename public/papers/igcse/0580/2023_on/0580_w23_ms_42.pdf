@@ -1,0 +1,50 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 626 >>
+stream
+BT
+/F1 22 Tf
+50 780 Td
+(Cambridge IGCSE Mathematics 0580/42 MARK SCHEME) Tj
+/F1 12 Tf
+0 -28 Td
+(Oct/Nov 2023 - Maximum Raw Mark: 100) Tj
+/F1 10 Tf
+0 -24 Td
+(---------------------------------------------------------------------------------------------------) Tj
+0 -20 Td
+(Question 1a: Tree probabilities: 3/5 and 2/5 [B1]) Tj 0 -16 Td
+(Product rule: 3/5 * 2/4 = 3/10 [M1, A1]) Tj 0 -16 Td
+() Tj 0 -16 Td
+(Question 1b: Vector OP = 2a + 3b [M1, M1, A1]) Tj 0 -16 Td
+() Tj 0 -16 Td
+(Question 2: Volume = 1/3 * pi * 6^2 * 14 = 527.79 cm^3 [M1, A1]) Tj 0 -16 Td
+(Mass = Volume * Density = 4116.7 g = 4.12 kg [M1, A1]) Tj 0 -16 Td
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000242 00000 n 
+0000000936 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1026
+%%EOF

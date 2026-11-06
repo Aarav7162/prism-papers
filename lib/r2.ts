@@ -53,9 +53,14 @@ export async function generateR2PresignedUrl({
   const sanitizedFilename = filename.replace(/["\\]/g, "_");
   const contentDisposition = `${disposition}; filename="${sanitizedFilename}"`;
 
-  // If live credentials are not provided (development / preview), generate compliant pre-signed R2 mockup URL
+  // If live credentials are not provided (development / preview / zero-credit-card setups),
+  // fall back cleanly to local static PDF serving from /public
   if (!isR2Configured) {
-    const base = env.R2_PUBLIC_URL || `https://${env.R2_BUCKET_NAME}.${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`;
+    const base =
+      env.R2_PUBLIC_URL && !env.R2_PUBLIC_URL.includes("internal")
+        ? env.R2_PUBLIC_URL.replace(/\/$/, "")
+        : "";
+    const cleanKey = fileKey.replace(/^\//, "");
     const params = new URLSearchParams({
       "response-content-disposition": contentDisposition,
       "response-content-type": "application/pdf",
@@ -63,7 +68,7 @@ export async function generateR2PresignedUrl({
       "X-Amz-Date": new Date().toISOString().replace(/[:-]|\.\d{3}/g, ""),
       "X-Amz-Signature": "dummy_prism_signature",
     });
-    return `${base}/${encodeURIComponent(fileKey)}?${params.toString()}`;
+    return `${base}/${cleanKey}?${params.toString()}`;
   }
 
   const command = new GetObjectCommand({

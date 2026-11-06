@@ -1,0 +1,48 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 654 >>
+stream
+BT
+/F1 22 Tf
+50 780 Td
+(Cambridge IGCSE Physics 0625/42 MARK SCHEME) Tj
+/F1 12 Tf
+0 -28 Td
+(May/June 2024 - Maximum Raw Mark: 80) Tj
+/F1 10 Tf
+0 -24 Td
+(---------------------------------------------------------------------------------------------------) Tj
+0 -20 Td
+(Question 1a: Rate of change of velocity [B1], gradient = 12 / 5 = 2.4 m/s^2 [M1, A1]) Tj 0 -16 Td
+(Question 1b: Triangle area = 0.5 * 5 * 12 = 30 m; Rectangle = 15 * 12 = 180 m; Total = 210 m [M1, A1]) Tj 0 -16 Td
+() Tj 0 -16 Td
+(Question 2: Energy E = P * t = 2200 * 160 = 352,000 J [M1]) Tj 0 -16 Td
+(E = m * c * Delta T => c = 352000 / 0.80 * 80 = 5500 J/kg K [M1, A1]) Tj 0 -16 Td
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000242 00000 n 
+0000000964 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1054
+%%EOF

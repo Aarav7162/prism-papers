@@ -1,0 +1,59 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1026 >>
+stream
+BT
+/F1 22 Tf
+50 780 Td
+(Cambridge IGCSE Mathematics 0580/22 MARK SCHEME) Tj
+/F1 12 Tf
+0 -28 Td
+(May/June 2024 - Maximum Raw Mark: 70) Tj
+/F1 10 Tf
+0 -24 Td
+(---------------------------------------------------------------------------------------------------) Tj
+0 -20 Td
+(MARK SCHEME NOTES:) Tj 0 -16 Td
+(M marks are given for a correct method applied to the problem.) Tj 0 -16 Td
+(A marks are given for an accurate answer following a correct method.) Tj 0 -16 Td
+(B marks are independent of method marks.) Tj 0 -16 Td
+() Tj 0 -16 Td
+(Question 1: 4.5 x 10^-3 [B1, B1]) Tj 0 -16 Td
+() Tj 0 -16 Td
+(Question 2a: 2x - 3x + 4 = 0 [M1, A1]) Tj 0 -16 Td
+(x = 1.5, x = -4 [A1]) Tj 0 -16 Td
+() Tj 0 -16 Td
+(Question 2b: Substitution into quadratic [M1]) Tj 0 -16 Td
+(5x^2 + 4x - 28 = 0 [A1] => x - 25x + 14 = 0 [M1]) Tj 0 -16 Td
+(2, 5 and -2.8, -4.6 [A1]) Tj 0 -16 Td
+() Tj 0 -16 Td
+(Question 3: AC^2 = 7^2 + 9^2 - 279 cos 60 = 67 => AC = 8.19 cm [M1, A1]) Tj 0 -16 Td
+(Area = 0.5 * 7 * 9 * sin 60 = 27.28 cm^2 [M1, A1]) Tj 0 -16 Td
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000242 00000 n 
+00000001336 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1426
+%%EOF

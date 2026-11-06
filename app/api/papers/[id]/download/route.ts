@@ -52,7 +52,11 @@ export async function GET(request: NextRequest, context: RouteContext) {
     });
 
     if (shouldRedirect) {
-      return NextResponse.redirect(presignedUrl, {
+      const targetUrl = presignedUrl.startsWith("http")
+        ? presignedUrl
+        : new URL(presignedUrl, request.url).toString();
+
+      return NextResponse.redirect(targetUrl, {
         status: 307,
         headers: {
           "Cache-Control": "private, no-cache, no-store, must-revalidate",
