@@ -1,0 +1,101 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #08090A;
+  color: #F1F5F9;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+/* Liquid Glass Substrate */
+.liquid-glass {
+  background: rgba(18, 20, 24, 0.65);
+  backdrop-filter: blur(48px) saturate(210%) brightness(110%);
+  -webkit-backdrop-filter: blur(48px) saturate(210%) brightness(110%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4),
+    0 24px 48px -12px rgba(0, 0, 0, 0.75);
+}
+
+.liquid-glass-subtle {
+  background: rgba(14, 16, 20, 0.45);
+  backdrop-filter: blur(32px) saturate(190%) brightness(105%);
+  -webkit-backdrop-filter: blur(32px) saturate(190%) brightness(105%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.specular-border {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.14);
+}
+
+/* 3D Paper Booklet Transforms */
+.perspective-container {
+  perspective: 1600px;
+  perspective-origin: center top;
+}
+
+.booklet-preserve-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.booklet-page-left {
+  transform-origin: right center;
+  box-shadow: -15px 15px 35px -5px rgba(0, 0, 0, 0.8), inset -12px 0 20px -8px rgba(0, 0, 0, 0.25);
+}
+
+.booklet-page-right {
+  transform-origin: left center;
+  box-shadow: 15px 15px 35px -5px rgba(0, 0, 0, 0.8), inset 12px 0 20px -8px rgba(0, 0, 0, 0.25);
+}
+
+.booklet-spine-crease {
+  background: linear-gradient(
+    90deg, 
+    rgba(0, 0, 0, 0.35) 0%, 
+    rgba(255, 255, 255, 0.1) 48%, 
+    rgba(0, 0, 0, 0.45) 52%, 
+    rgba(0, 0, 0, 0.25) 100%
+  );
+}
+
+/* Ambient dynamic mesh glow */
+@keyframes ambientDrift {
+  0% { transform: translate(0px, 0px) scale(1); opacity: 0.7; }
+  50% { transform: translate(-30px, 20px) scale(1.08); opacity: 0.9; }
+  100% { transform: translate(0px, 0px) scale(1); opacity: 0.7; }
+}
+
+.animate-ambient-drift {
+  animation: ambientDrift 18s ease-in-out infinite alternate;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}

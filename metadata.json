@@ -1,0 +1,6 @@
+{
+  "name": "Prism",
+  "description": "Next-generation past-paper solving deck with authentic PDF examination papers, keyboard-first navigation, physical optics styling, and split mark scheme workbench.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
