@@ -1,0 +1,11 @@
+name = "prism-papers"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Cloudflare Pages build output directory
+pages_build_output_dir = "dist"
+
+# Cloudflare R2 bucket binding for zero-egress PDF access
+[[r2_buckets]]
+binding = "PRISM_BUCKET"
+bucket_name = "prism-papers"
